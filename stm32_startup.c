@@ -5,6 +5,14 @@
 #define SRAM_END   (SRAM_START + SRAM_SIZE)
 #define STACK_START SRAM_END
 
+extern uint32_t _etext;
+extern uint32_t _sdata;
+extern uint32_t _edata;
+extern uint32_t _sbss;
+extern uint32_t _ebss;
+
+int main(void);
+
 void Reset_Handler(void);
 void Default_Handler(void);
 
@@ -80,7 +88,7 @@ void DMA2_Channel3_IRQHandler(void)     __attribute__((weak, alias("Default_Hand
 void DMA2_Channel4_5_IRQHandler(void)   __attribute__((weak, alias("Default_Handler")));
 
 
-uint32_t vectors[] __attribute__((section(".isr_vector"))) = {
+const uint32_t vectors[] __attribute__((section(".isr_vector"))) = {
     STACK_START,
     (uint32_t)&Reset_Handler,
     (uint32_t)&NMI_Handler,
@@ -159,12 +167,27 @@ uint32_t vectors[] __attribute__((section(".isr_vector"))) = {
     (uint32_t)&DMA2_Channel4_5_IRQHandler
 };
 
-void Default_Handler(void)
-{
+void Default_Handler(void){
     while (1);
+
 }
 
-void Reset_Handler(void)
-{
-    while (1);
+void Reset_Handler(void){
+
+    //copy .data section to SRAM
+    uint32_t size = &_edata - &_sdata;
+
+    uint8_t *pDst = (uint8_t *)&_sdata; //sram
+    uint8_t *pSrc = (uint8_t *)&_etext; //flash
+    for (uint32_t i = 0; i < size; i++) {
+        *pDst++ = *pSrc++; // copia il valore contenuto in Flash (dove punta pSrc) e lo copia in
+                           // Sram all'indirizzo puntato pDst, sposta inoltre tutti i puntatori avanti
+                           // di un byte
+    }
+    size = &_ebss - &_sbss;
+    pDst = (uint8_t*)&_sbss;
+    for (uint32_t i = 0; i<size; i++) {
+        *pDst++ = 0;
+    }
+    main();
 }

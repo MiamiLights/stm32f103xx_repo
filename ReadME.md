@@ -12,3 +12,5 @@ Le componenti di un linker script sono le seguenti:
 - ENTRY, definisce qual é il punto esatto in cui inizia un programma.
 - MEMORY, definisce quali sono le aree di memoria disponibili e quanto sono grandi.
 - SECTIONS, definisce come accorpare le parti dei file .o generate dal compilatore. La decisione della posizione del segmento avviene tramite il comando >vma (virtual memory address) AT> lma (load memory address). VMA é l'indirizzo dove la sezione esisterà e sarà acceduta dalla CPU a runtime, mentre LMA é l'indirizzo dove la sezione sarà fisicamente contenuta o caricata.
+
+Il *Location Counter* è una speciale variabile interna rappresentata da un singolo punto (.). Agisce come un cursore che tiene traccia dell'indirizzo di memoria corrente mentre il linker svolge il suo lavoro.
