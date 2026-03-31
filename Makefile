@@ -16,3 +16,6 @@ final.elf: main.o stm32_startup.o
 
 clean:
 	rm -rf *.o *.elf
+
+load:
+	openocd -f interface/stlink.cfg -f board/stm32f103c8_blue_pill.cfg
