@@ -1,9 +1,10 @@
 #include "main.h"
+#include "stdint.h"
 
 int prova = 1;
 int prova2;
 const int var1 = 1;
-/*
+
 void delay(volatile uint32_t count) {
     while(count--) {
         __asm("nop");
@@ -18,16 +19,13 @@ void LED_init(void){
 
     while (1) {
         GPIOB_ODR |= LED_PIN; // impostiamo il pin PB2 ad alto
-        delay(5000000);
+        delay(500000);
 
         GPIOB_ODR &= ~(LED_PIN);
-        delay(5000000);
+        delay(500000);
     }
 }
-*/
 
 int main(void) {
-    while (1) {
-
-    }
+    LED_init();
 }
