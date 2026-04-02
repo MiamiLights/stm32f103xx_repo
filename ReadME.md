@@ -14,3 +14,18 @@ Le componenti di un linker script sono le seguenti:
 - SECTIONS, definisce come accorpare le parti dei file .o generate dal compilatore. La decisione della posizione del segmento avviene tramite il comando >vma (virtual memory address) AT> lma (load memory address). VMA é l'indirizzo dove la sezione esisterà e sarà acceduta dalla CPU a runtime, mentre LMA é l'indirizzo dove la sezione sarà fisicamente contenuta o caricata.
 
 Il *Location Counter* è una speciale variabile interna rappresentata da un singolo punto (.). Agisce come un cursore che tiene traccia dell'indirizzo di memoria corrente mentre il linker svolge il suo lavoro.
+
+
+### Info sui registri
+
+Flag principali dei registri di stato:
+
+SB si pulisce leggendo da SR1 e poi scrivendo in I2C_DR
+
+ADDR si pulisce leggendo I2C_SR1 e I2C_SR2
+
+TXE si pulisce scrivendo in DR
+
+RXNE si pulisce leggendo in DR
+
+BTF si pulisce leggendo SR1 e leggendo/scrivendo da DR.
