@@ -1,6 +1,6 @@
-#include "main.h"
+#include "../headers/main.h"
 #include <stdint.h>
-#include "umtemp.h"
+#include "../headers/umtemp.h"
 
 void LED_init(void){
 

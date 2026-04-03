@@ -1,9 +1,11 @@
 CC=arm-none-eabi-gcc
 MACH=cortex-m3
-CFLAGS= -c -g -mcpu=$(MACH) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0
+CFLAGS= -c -g -mcpu=$(MACH) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0 -Iheader
 LDFLAGS= -mcpu=$(MACH) -mthumb -mfloat-abi=soft --specs=nano.specs --specs=nosys.specs -T stm32_ls.ld -Wl,-Map=final.map -u _printf_float
-SRCS= $(wildcard *.c)
+SRCS= $(wildcard $(SRC_DIR)/*.c)
 OBJS= $(SRCS:.c=.o)
+INC_DIR= headers
+SRC_DIR= src
 
 
 all:final.elf
@@ -15,7 +17,7 @@ final.elf: $(OBJS)
 	$(CC) $(LDFLAGS) $^ -o $@
 
 clean:
-	rm -rf *.o *.elf *.map
+	rm -rf $(SRC_DIR)/*.o *.elf *.map
 
 load:
 	openocd -f interface/stlink.cfg -f board/stm32f103c8_blue_pill.cfg
