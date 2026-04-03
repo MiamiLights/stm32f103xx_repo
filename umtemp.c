@@ -1,8 +1,6 @@
 #include <stdint.h>
 #include "umtemp.h"
 
-
-
 #define RCC_BASE 0x40021000UL
 #define RCC_APB1RST (*(volatile uint32_t*)(RCC_BASE + 0x10UL)) // reset register (i2c)
 #define RCC_APB1ENR (*(volatile uint32_t*)(RCC_BASE + 0x1CUL)) // clock enable register (i2c)
@@ -76,7 +74,13 @@ void i2c1_start(uint8_t address, uint8_t direction){
     while (!(I2C1_SR1 & SR1_START_GENERATED)){};
     I2C1_DR = ((address << 1) | direction) ;
 
-    while (!(I2C1_SR1 & SR1_ADDRESS_SENT)){}; //aspettiamo finchè l'indirizzo non viene mandato
+    while (!(I2C1_SR1 & SR1_ADDRESS_SENT)){
+        if (I2C1_SR1 & (1U << 10)) { // AF: Acknowledge failure
+            I2C1_SR1 &= ~(1U << 10); // Clear AF
+            I2C1_CR1 |= (1U << 9);   // Send STOP
+            return;
+        }
+    };
 
     (void)I2C1_SR1;
     (void)I2C1_SR2;
@@ -89,8 +93,12 @@ void i2c1_write(uint8_t data){
 }
 
 void i2c1_stop(void){
-    while(!(I2C1_SR1 & SR1_TXE_EMPTY)){};
-    while(!(I2C1_SR1 & SR1_BTF_FINISHED)){};
+    // Se siamo in trasmissione, aspettiamo che l'ultimo byte sia inviato (BTF)
+    // Se siamo in ricezione, lo STOP è già stato richiesto in i2c1_read
+    if (!(I2C1_SR1 & SR1_RXNE_NE)) {
+        while(!(I2C1_SR1 & SR1_TXE_EMPTY)){};
+        while(!(I2C1_SR1 & SR1_BTF_FINISHED)){};
+    }
     I2C1_CR1 |= (1<<9); // stop condition
 }
 
@@ -108,9 +116,10 @@ void i2c1_read(int n, uint8_t *data){
 }
 
 void delay_ms(uint32_t ms) {
-    // Approssimativo per 8MHz: circa 1000 iterazioni per 1ms
-    for(uint32_t i = 0; i < ms * 1000; i++) {
-        __asm__("nop");
+    for(uint32_t j = 0; j < ms; j++) {
+        for(uint32_t i = 0; i < 1000; i++) {
+            __asm__("nop");
+        }
     }
 }
 

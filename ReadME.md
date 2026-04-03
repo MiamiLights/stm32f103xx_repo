@@ -29,3 +29,14 @@ TXE si pulisce scrivendo in DR
 RXNE si pulisce leggendo in DR
 
 BTF si pulisce leggendo SR1 e leggendo/scrivendo da DR.
+
+
+### Debug
+
+make load (con openocd)
+
+per connettere gdb a openocd:
+gdb: target extended-remote :3333
+
+monitor reset init
+monitor reset halt

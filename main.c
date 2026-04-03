@@ -1,17 +1,6 @@
 #include "main.h"
 #include <stdint.h>
-#include <stdio.h>
 #include "umtemp.h"
-
-int prova = 1;
-int prova2;
-const int var1 = 1;
-
-void delay(volatile uint32_t count) {
-    while(count--) {
-        __asm("nop");
-    }
-}
 
 void LED_init(void){
 
@@ -19,31 +8,23 @@ void LED_init(void){
     GPIOB_CRL &= ~(0xFUL << 8); // puliamo i bit di configurazione per PB2
     GPIOB_CRL |= (1U << 8); // modalità general purpose output push-pull
 
-    while (1) {
-        GPIOB_ODR |= LED_PIN; // impostiamo il pin PB2 ad alto
-        delay(500000);
-
-        GPIOB_ODR &= ~(LED_PIN);
-        delay(500000);
-    }
+    GPIOB_ODR |= LED_PIN; // impostiamo il pin PB2 ad alto
 }
+
+AHT20_Data sensor_data;
 
 int main(void) {
     // LED_init();
 
     uint8_t buffer[7];
     i2c1_init();
-    AHT20_Data sensor_data;
-
     AHT20_init_sequence();
 
     while (1) {
         AHT20_trigger_measurement();
         AHT20_read_results(buffer);
         calculate_data(buffer, &sensor_data);
-        //printf("%f", sensor_data.humidity);
-        //printf("%f", sensor_data.temperature);
-        delay(5000000);
+        delay_ms(2000); // 2 secondi tra una lettura e l'altra
     }
 
 }
@@ -54,7 +35,6 @@ void AHT20_init_sequence(void){
     delay_ms(40);
     i2c1_start(0x38, 1);
     i2c1_read(1, &status);
-    i2c1_stop();
 
     if(!(status & (1U << 3))){
         i2c1_start(0x38, 0);
@@ -83,13 +63,8 @@ void AHT20_read_results(uint8_t *buffer) {
     do {
         i2c1_start(0x38, 1);
         i2c1_read(1, &status);
-        i2c1_stop();
-
-
-
     } while (status & 0x80); // Se status & 0x80 è vero, il sensore è ancora BUSY
 
     i2c1_start(0x38, 1);
     i2c1_read(7, buffer);
-    i2c1_stop();
 }
