@@ -26,9 +26,16 @@ SECTIONS{
     {
         . = ALIGN(4);
         _sbss = .;
+        __bss_start__ = _sbss;
         *(.bss)
         *(COMMON)
         . = ALIGN(4);
         _ebss = .;
+        __bss_end__ = _ebss;
+        . = ALIGN(4);
+        end = .;
+        __end__ = end;
     }>SRAM
+
+    __heap_limit = 0x20004C00;
 }

@@ -1,7 +1,7 @@
 CC=arm-none-eabi-gcc
 MACH=cortex-m3
-CFLAGS= -c -g -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -O0
-LDFLAGS= --specs=nano.specs --specs=nosys.specs -nostartfiles -T stm32_ls.ld -Wl,-Map=final.map
+CFLAGS= -c -g -mcpu=$(MACH) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0
+LDFLAGS= -mcpu=$(MACH) -mthumb -mfloat-abi=soft --specs=nano.specs --specs=nosys.specs -T stm32_ls.ld -Wl,-Map=final.map -u _printf_float
 SRCS= $(wildcard *.c)
 OBJS= $(SRCS:.c=.o)
 

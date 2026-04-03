@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include "umtemp.h"
 
+
+
 #define RCC_BASE 0x40021000UL
 #define RCC_APB1RST (*(volatile uint32_t*)(RCC_BASE + 0x10UL)) // reset register (i2c)
 #define RCC_APB1ENR (*(volatile uint32_t*)(RCC_BASE + 0x1CUL)) // clock enable register (i2c)
@@ -110,4 +112,14 @@ void delay_ms(uint32_t ms) {
     for(uint32_t i = 0; i < ms * 1000; i++) {
         __asm__("nop");
     }
+}
+
+void calculate_data(uint8_t *buffer, AHT20_Data *data){
+    uint32_t temp1 = buffer[3];
+    uint32_t mask = 0xF;
+    uint32_t raw_humidity = ((uint32_t) buffer[1] << 12) | ((uint32_t)buffer[2]<< 4 | (uint32_t)buffer[3] >> 4);
+    uint32_t raw_temp = ((temp1 & mask)<< 16) | ((uint32_t)buffer[4]<< 8 | buffer[5] );
+
+    data->humidity = ((float)raw_humidity/1048576.0f) * 100.0f;
+    data->temperature = (((float)raw_temp/1048576.0f)*200.0f) - 50.0f;
 }
