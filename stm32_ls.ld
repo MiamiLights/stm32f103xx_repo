@@ -6,36 +6,39 @@ MEMORY{
 SECTIONS{
     .text :
     {
+        . = ALIGN(8);
         *(.isr_vector)
         *(.text)
+        *(.text.*)
         *(.rodata)
-        . = ALIGN(4);
+        *(.rodata.*)
+        . = ALIGN(8);
         _etext = .;
     }> FLASH
 
     .data :
     {
-        . = ALIGN(4);
+        . = ALIGN(8);
         _sdata = .;
         *(.data)
-        . = ALIGN(4);
+        *(.data.*)
+        . = ALIGN(8);
         _edata = .;
     }> SRAM AT> FLASH
 
     .bss :
     {
-        . = ALIGN(4);
+        . = ALIGN(8);
         _sbss = .;
         __bss_start__ = _sbss;
         *(.bss)
+        *(.bss.*)
         *(COMMON)
-        . = ALIGN(4);
+        . = ALIGN(8);
         _ebss = .;
         __bss_end__ = _ebss;
-        . = ALIGN(4);
+        . = ALIGN(8);
         end = .;
         __end__ = end;
     }>SRAM
-
-    __heap_limit = 0x20004C00;
 }

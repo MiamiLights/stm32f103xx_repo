@@ -27,4 +27,4 @@ void AHT20_trigger_measurement(void);
 void AHT20_read_results(uint8_t *buffer);
 void AHT20_get_values(float *humidity, float *temperature);
 
-#endif // MAIN_H
+#endif
