@@ -1,6 +1,6 @@
 [
   {
-    "file": "src/a7670.c",
+    "file": "src/i2c/aht20.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -11,16 +11,18 @@
       "-std=gnu11",
       "-Wall",
       "-O0",
-      "-Iheaders",
-      "src/a7670.c",
+      "-Iheaders/core",
+      "-Iheaders/i2c",
+      "-Iheaders/uart",
+      "src/i2c/aht20.c",
       "-o",
-      "obj/a7670.o"
+      "obj/i2c/aht20.o"
     ],
     "directory": "/home/nicola/Documents/i2clib",
-    "output": "obj/a7670.o"
+    "output": "obj/i2c/aht20.o"
   },
   {
-    "file": "src/aht20.c",
+    "file": "src/i2c/i2c.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -31,16 +33,18 @@
       "-std=gnu11",
       "-Wall",
       "-O0",
-      "-Iheaders",
-      "src/aht20.c",
+      "-Iheaders/core",
+      "-Iheaders/i2c",
+      "-Iheaders/uart",
+      "src/i2c/i2c.c",
       "-o",
-      "obj/aht20.o"
+      "obj/i2c/i2c.o"
     ],
     "directory": "/home/nicola/Documents/i2clib",
-    "output": "obj/aht20.o"
+    "output": "obj/i2c/i2c.o"
   },
   {
-    "file": "src/clock_set.c",
+    "file": "src/core/syscalls.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -51,16 +55,18 @@
       "-std=gnu11",
       "-Wall",
       "-O0",
-      "-Iheaders",
-      "src/clock_set.c",
+      "-Iheaders/core",
+      "-Iheaders/i2c",
+      "-Iheaders/uart",
+      "src/core/syscalls.c",
       "-o",
-      "obj/clock_set.o"
+      "obj/core/syscalls.o"
     ],
     "directory": "/home/nicola/Documents/i2clib",
-    "output": "obj/clock_set.o"
+    "output": "obj/core/syscalls.o"
   },
   {
-    "file": "src/i2c.c",
+    "file": "src/core/stm32_startup.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -71,16 +77,18 @@
       "-std=gnu11",
       "-Wall",
       "-O0",
-      "-Iheaders",
-      "src/i2c.c",
+      "-Iheaders/core",
+      "-Iheaders/i2c",
+      "-Iheaders/uart",
+      "src/core/stm32_startup.c",
       "-o",
-      "obj/i2c.o"
+      "obj/core/stm32_startup.o"
     ],
     "directory": "/home/nicola/Documents/i2clib",
-    "output": "obj/i2c.o"
+    "output": "obj/core/stm32_startup.o"
   },
   {
-    "file": "src/main.c",
+    "file": "src/core/clock_set.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -91,16 +99,18 @@
       "-std=gnu11",
       "-Wall",
       "-O0",
-      "-Iheaders",
-      "src/main.c",
+      "-Iheaders/core",
+      "-Iheaders/i2c",
+      "-Iheaders/uart",
+      "src/core/clock_set.c",
       "-o",
-      "obj/main.o"
+      "obj/core/clock_set.o"
     ],
     "directory": "/home/nicola/Documents/i2clib",
-    "output": "obj/main.o"
+    "output": "obj/core/clock_set.o"
   },
   {
-    "file": "src/neo6m.c",
+    "file": "src/core/timeout.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -111,16 +121,18 @@
       "-std=gnu11",
       "-Wall",
       "-O0",
-      "-Iheaders",
-      "src/neo6m.c",
+      "-Iheaders/core",
+      "-Iheaders/i2c",
+      "-Iheaders/uart",
+      "src/core/timeout.c",
       "-o",
-      "obj/neo6m.o"
+      "obj/core/timeout.o"
     ],
     "directory": "/home/nicola/Documents/i2clib",
-    "output": "obj/neo6m.o"
+    "output": "obj/core/timeout.o"
   },
   {
-    "file": "src/stm32_startup.c",
+    "file": "src/core/main.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -131,16 +143,18 @@
       "-std=gnu11",
       "-Wall",
       "-O0",
-      "-Iheaders",
-      "src/stm32_startup.c",
+      "-Iheaders/core",
+      "-Iheaders/i2c",
+      "-Iheaders/uart",
+      "src/core/main.c",
       "-o",
-      "obj/stm32_startup.o"
+      "obj/core/main.o"
     ],
     "directory": "/home/nicola/Documents/i2clib",
-    "output": "obj/stm32_startup.o"
+    "output": "obj/core/main.o"
   },
   {
-    "file": "src/syscalls.c",
+    "file": "src/uart/usart.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -151,16 +165,18 @@
       "-std=gnu11",
       "-Wall",
       "-O0",
-      "-Iheaders",
-      "src/syscalls.c",
+      "-Iheaders/core",
+      "-Iheaders/i2c",
+      "-Iheaders/uart",
+      "src/uart/usart.c",
       "-o",
-      "obj/syscalls.o"
+      "obj/uart/usart.o"
     ],
     "directory": "/home/nicola/Documents/i2clib",
-    "output": "obj/syscalls.o"
+    "output": "obj/uart/usart.o"
   },
   {
-    "file": "src/timeout.c",
+    "file": "src/uart/neo6m.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -171,16 +187,18 @@
       "-std=gnu11",
       "-Wall",
       "-O0",
-      "-Iheaders",
-      "src/timeout.c",
+      "-Iheaders/core",
+      "-Iheaders/i2c",
+      "-Iheaders/uart",
+      "src/uart/neo6m.c",
       "-o",
-      "obj/timeout.o"
+      "obj/uart/neo6m.o"
     ],
     "directory": "/home/nicola/Documents/i2clib",
-    "output": "obj/timeout.o"
+    "output": "obj/uart/neo6m.o"
   },
   {
-    "file": "src/usart.c",
+    "file": "src/uart/a7670.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -191,12 +209,14 @@
       "-std=gnu11",
       "-Wall",
       "-O0",
-      "-Iheaders",
-      "src/usart.c",
+      "-Iheaders/core",
+      "-Iheaders/i2c",
+      "-Iheaders/uart",
+      "src/uart/a7670.c",
       "-o",
-      "obj/usart.o"
+      "obj/uart/a7670.o"
     ],
     "directory": "/home/nicola/Documents/i2clib",
-    "output": "obj/usart.o"
+    "output": "obj/uart/a7670.o"
   }
 ]

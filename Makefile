@@ -1,23 +1,24 @@
 CC=arm-none-eabi-gcc
 MACH=cortex-m3
-CFLAGS= -c -g -mcpu=$(MACH) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0 -Iheaders
+CFLAGS= -c -g -mcpu=$(MACH) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0 \
+        -Iheaders/core -Iheaders/i2c -Iheaders/uart
 LDFLAGS= -mcpu=$(MACH) -mthumb -mfloat-abi=soft --specs=nano.specs --specs=nosys.specs -T stm32_ls.ld -Wl,-Map=final.map -u _printf_float -lm
 
 SRC_DIR= src
-INC_DIR= headers
 OBJ_DIR= obj
 
-SRCS= $(wildcard $(SRC_DIR)/*.c)
-# Trasforma src/file.c in obj/file.o
+# Trova tutti i file .c in src/ e nelle sue sottocartelle
+SRCS= $(shell find $(SRC_DIR) -name "*.c")
+# Mappa src/percorso/file.c in obj/file.o
 OBJS= $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 all: $(OBJ_DIR) final.elf
 
-# Crea la directory degli oggetti se non esiste
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR)/core $(OBJ_DIR)/i2c $(OBJ_DIR)/uart
 
-# Regola di compilazione: mette i .o in OBJ_DIR
+# Regola di compilazione generica per le sottocartelle
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) $< -o $@
 
