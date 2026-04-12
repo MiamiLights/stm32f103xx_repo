@@ -1,0 +1,202 @@
+[
+  {
+    "file": "src/a7670.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-g",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft",
+      "-std=gnu11",
+      "-Wall",
+      "-O0",
+      "-Iheaders",
+      "src/a7670.c",
+      "-o",
+      "obj/a7670.o"
+    ],
+    "directory": "/home/nicola/Documents/i2clib",
+    "output": "obj/a7670.o"
+  },
+  {
+    "file": "src/aht20.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-g",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft",
+      "-std=gnu11",
+      "-Wall",
+      "-O0",
+      "-Iheaders",
+      "src/aht20.c",
+      "-o",
+      "obj/aht20.o"
+    ],
+    "directory": "/home/nicola/Documents/i2clib",
+    "output": "obj/aht20.o"
+  },
+  {
+    "file": "src/clock_set.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-g",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft",
+      "-std=gnu11",
+      "-Wall",
+      "-O0",
+      "-Iheaders",
+      "src/clock_set.c",
+      "-o",
+      "obj/clock_set.o"
+    ],
+    "directory": "/home/nicola/Documents/i2clib",
+    "output": "obj/clock_set.o"
+  },
+  {
+    "file": "src/i2c.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-g",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft",
+      "-std=gnu11",
+      "-Wall",
+      "-O0",
+      "-Iheaders",
+      "src/i2c.c",
+      "-o",
+      "obj/i2c.o"
+    ],
+    "directory": "/home/nicola/Documents/i2clib",
+    "output": "obj/i2c.o"
+  },
+  {
+    "file": "src/main.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-g",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft",
+      "-std=gnu11",
+      "-Wall",
+      "-O0",
+      "-Iheaders",
+      "src/main.c",
+      "-o",
+      "obj/main.o"
+    ],
+    "directory": "/home/nicola/Documents/i2clib",
+    "output": "obj/main.o"
+  },
+  {
+    "file": "src/neo6m.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-g",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft",
+      "-std=gnu11",
+      "-Wall",
+      "-O0",
+      "-Iheaders",
+      "src/neo6m.c",
+      "-o",
+      "obj/neo6m.o"
+    ],
+    "directory": "/home/nicola/Documents/i2clib",
+    "output": "obj/neo6m.o"
+  },
+  {
+    "file": "src/stm32_startup.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-g",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft",
+      "-std=gnu11",
+      "-Wall",
+      "-O0",
+      "-Iheaders",
+      "src/stm32_startup.c",
+      "-o",
+      "obj/stm32_startup.o"
+    ],
+    "directory": "/home/nicola/Documents/i2clib",
+    "output": "obj/stm32_startup.o"
+  },
+  {
+    "file": "src/syscalls.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-g",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft",
+      "-std=gnu11",
+      "-Wall",
+      "-O0",
+      "-Iheaders",
+      "src/syscalls.c",
+      "-o",
+      "obj/syscalls.o"
+    ],
+    "directory": "/home/nicola/Documents/i2clib",
+    "output": "obj/syscalls.o"
+  },
+  {
+    "file": "src/timeout.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-g",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft",
+      "-std=gnu11",
+      "-Wall",
+      "-O0",
+      "-Iheaders",
+      "src/timeout.c",
+      "-o",
+      "obj/timeout.o"
+    ],
+    "directory": "/home/nicola/Documents/i2clib",
+    "output": "obj/timeout.o"
+  },
+  {
+    "file": "src/usart.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-g",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft",
+      "-std=gnu11",
+      "-Wall",
+      "-O0",
+      "-Iheaders",
+      "src/usart.c",
+      "-o",
+      "obj/usart.o"
+    ],
+    "directory": "/home/nicola/Documents/i2clib",
+    "output": "obj/usart.o"
+  }
+]
