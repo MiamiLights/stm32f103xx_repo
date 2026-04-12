@@ -27,5 +27,5 @@ void delay(uint32_t delay_ms){
     }
 
     // disattiviamo systick
-    SYSTICK_CSR = 0;
+    SYSTICK_CSR &= ~1U;
 }

@@ -22,6 +22,7 @@
 #define RCC_BASE 0x40021000UL
 
 #define GPIOA_CRH (*(volatile uint32_t*)(GPIOA_BASE + 0x04UL))
+#define GPIOA_BSRR (*(volatile uint32_t*)(GPIOA_BASE + 0x10UL))
 
 #define RCC_APB2RST (*(volatile uint32_t*)(RCC_BASE + 0x0CUL))
 
@@ -32,12 +33,15 @@ typedef struct{
     char fixValid;
 } GPS_Data;
 
-
+void A7670E_send_sms(char* number, char* message);
 void usart1_init(uint8_t fclk, uint32_t baudrate);
 void usart1_send(uint8_t data);
 void usart1_send_string(char* data);
+void A7670E_poweron(void);
 uint8_t usart1_receive();
-void read_gps_string(char*buffer, uint32_t length_max);
-void format_gps_data(char *buffer, GPS_Data *data);
+void A7670_read_gps_string(char*buffer, uint32_t length_max);
+void NEO6M_read_gps_string(char*buffer, uint32_t length_max);
+void A7670_format_gps_data(char *buffer, GPS_Data *data);
+void NEO6M_format_gps_data(char *buffer, GPS_Data *data);
 
 #endif

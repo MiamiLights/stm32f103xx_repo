@@ -1,4 +1,9 @@
 ENTRY(Reset_Handler)
+
+_estack = ORIGIN(SRAM) + LENGTH(SRAM);
+_Min_Heap_Size = 0x0;
+_Min_Stack_Size = 0x800;
+
 MEMORY{
     FLASH(rx):ORIGIN =0x08000000,LENGTH =128K
     SRAM(rwx):ORIGIN =0x20000000,LENGTH =20K
@@ -40,5 +45,15 @@ SECTIONS{
         . = ALIGN(8);
         end = .;
         __end__ = end;
+        _end = end;
+    }>SRAM
+
+    ._user_heap_stack :
+    {
+        . = ALIGN(8);
+        . = . + _Min_Heap_Size;
+        __heap_limit = .;
+        . = . + _Min_Stack_Size;
+        . = ALIGN(8);
     }>SRAM
 }

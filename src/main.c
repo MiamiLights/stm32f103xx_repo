@@ -3,9 +3,7 @@
 #include "../headers/timeout.h"
 #include "../headers/umtemp.h"
 #include "../headers/usart.h"
-#include "stdlib.h"
 #include <stdint.h>
-#include <string.h>
 
 void LED_init(void) {
 
@@ -18,9 +16,13 @@ void LED_init(void) {
 
 AHT20_Data sensor_data;
 GPS_Data gpsData;
+uint8_t receive;
+uint8_t freq;
+void A7670_test();
+void A7670_init();
 
 int main(void) {
-  // LED_init();
+  //LED_init();
   /*
 
   uint8_t buffer[7];
@@ -34,14 +36,14 @@ int main(void) {
       delay(2000); // 2 secondi tra una lettura e l'altra
   }
   */
-
-  uint8_t freq = clock_setup();
+  freq = clock_setup();
+  ticks_init(freq);
   usart1_init(freq, 9600);
-
   char buffer_gps[100];
 
   while (1) {
-      format_gps_data(buffer_gps, &gpsData);
+      // A7670_format_gps_data(buffer_gps, &gpsData);
+      NEO6M_format_gps_data(buffer_gps, &gpsData);
   }
 }
 
@@ -83,4 +85,20 @@ void AHT20_read_results(uint8_t *buffer) {
 
   i2c1_start(0x38, 1);
   i2c1_read(7, buffer);
+}
+
+void A7670_test(){
+    A7670E_send_sms("+393314271084", "Ciao dal STM32!");
+
+    delay(500);
+    usart1_send_string("AT+CGNSSPWR=1\r");
+    delay(500);
+    usart1_send_string("AT+CGPSINFO=1\r");
+    delay(500);
+}
+
+void A7670_init(){
+    usart1_init(freq, 115200);
+    A7670E_poweron();
+    delay(15000);
 }
