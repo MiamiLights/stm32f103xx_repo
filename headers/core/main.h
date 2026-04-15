@@ -2,7 +2,6 @@
 #define MAIN_H
 
 #include <stdint.h>
-#include "common.h"
 
 // LED PB2
 #define LED_PIN (1U << 2)

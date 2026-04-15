@@ -3,8 +3,11 @@
 #include "timeout.h"
 #include "usart.h"
 #include "a7670.h"
+#include "neo6m.h"
 #include "aht20.h"
 #include <stdint.h>
+#include "common.h"
+#include "buzzer.h"
 
 void LED_init(void) {
   RCC_APB2ENR |= (1U << 3);   // abilitiamo il clock per la porta B (GPIOBEN)
@@ -42,9 +45,6 @@ int main(void) {
   freq = clock_setup();
   ticks_init(freq);
 
-  //LED_init();
-
-  // Esempio USART per GPS
   usart1_init(freq, 9600);
   char buffer_gps[100];
 
@@ -55,17 +55,27 @@ int main(void) {
   uint8_t buffer_i2c[7];
   */
 
+  /*
+  RCC_APB2ENR |= (1U << 2);
+  GPIOA_CRL &= ~(0xFU << 28);
+  GPIOA_CRL |= (0b0010U << 28);
+  */
+  LED_init();
+  TIM3_setup();
+
   while (1) {
-      // NEO6M_format_gps_data(buffer_gps, &gpsData);
+      /*
+      GPIOA_ODR |= (1U<<7);
+      delay(500);
+      GPIOA_ODR &= ~(1U<<7);
+      delay(500);
+      NEO6M_format_gps_data(buffer_gps, &gpsData);
       A7670_format_gps_data(buffer_gps, &gpsData);
 
-      /*
       AHT20_trigger_measurement();
       AHT20_read_results(buffer_i2c);
       AHT20_calculate_data(buffer_i2c, &sensor_data);
       */
 
-      LED_toggle();
-      delay(2000);
   }
 }

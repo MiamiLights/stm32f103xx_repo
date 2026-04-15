@@ -1,5 +1,28 @@
 [
   {
+    "file": "src/DMA/buzzer.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-g",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-mfloat-abi=soft",
+      "-std=gnu11",
+      "-Wall",
+      "-O0",
+      "-Iheaders/core",
+      "-Iheaders/i2c",
+      "-Iheaders/uart",
+      "-Iheaders/DMA",
+      "src/DMA/buzzer.c",
+      "-o",
+      "obj/DMA/buzzer.o"
+    ],
+    "directory": "/home/nicola/Documents/stm32f103xx",
+    "output": "obj/DMA/buzzer.o"
+  },
+  {
     "file": "src/i2c/aht20.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
@@ -14,11 +37,12 @@
       "-Iheaders/core",
       "-Iheaders/i2c",
       "-Iheaders/uart",
+      "-Iheaders/DMA",
       "src/i2c/aht20.c",
       "-o",
       "obj/i2c/aht20.o"
     ],
-    "directory": "/home/nicola/Documents/i2clib",
+    "directory": "/home/nicola/Documents/stm32f103xx",
     "output": "obj/i2c/aht20.o"
   },
   {
@@ -36,11 +60,12 @@
       "-Iheaders/core",
       "-Iheaders/i2c",
       "-Iheaders/uart",
+      "-Iheaders/DMA",
       "src/i2c/i2c.c",
       "-o",
       "obj/i2c/i2c.o"
     ],
-    "directory": "/home/nicola/Documents/i2clib",
+    "directory": "/home/nicola/Documents/stm32f103xx",
     "output": "obj/i2c/i2c.o"
   },
   {
@@ -58,11 +83,12 @@
       "-Iheaders/core",
       "-Iheaders/i2c",
       "-Iheaders/uart",
+      "-Iheaders/DMA",
       "src/core/syscalls.c",
       "-o",
       "obj/core/syscalls.o"
     ],
-    "directory": "/home/nicola/Documents/i2clib",
+    "directory": "/home/nicola/Documents/stm32f103xx",
     "output": "obj/core/syscalls.o"
   },
   {
@@ -80,11 +106,12 @@
       "-Iheaders/core",
       "-Iheaders/i2c",
       "-Iheaders/uart",
+      "-Iheaders/DMA",
       "src/core/stm32_startup.c",
       "-o",
       "obj/core/stm32_startup.o"
     ],
-    "directory": "/home/nicola/Documents/i2clib",
+    "directory": "/home/nicola/Documents/stm32f103xx",
     "output": "obj/core/stm32_startup.o"
   },
   {
@@ -102,11 +129,12 @@
       "-Iheaders/core",
       "-Iheaders/i2c",
       "-Iheaders/uart",
+      "-Iheaders/DMA",
       "src/core/clock_set.c",
       "-o",
       "obj/core/clock_set.o"
     ],
-    "directory": "/home/nicola/Documents/i2clib",
+    "directory": "/home/nicola/Documents/stm32f103xx",
     "output": "obj/core/clock_set.o"
   },
   {
@@ -124,11 +152,12 @@
       "-Iheaders/core",
       "-Iheaders/i2c",
       "-Iheaders/uart",
+      "-Iheaders/DMA",
       "src/core/timeout.c",
       "-o",
       "obj/core/timeout.o"
     ],
-    "directory": "/home/nicola/Documents/i2clib",
+    "directory": "/home/nicola/Documents/stm32f103xx",
     "output": "obj/core/timeout.o"
   },
   {
@@ -146,11 +175,12 @@
       "-Iheaders/core",
       "-Iheaders/i2c",
       "-Iheaders/uart",
+      "-Iheaders/DMA",
       "src/core/main.c",
       "-o",
       "obj/core/main.o"
     ],
-    "directory": "/home/nicola/Documents/i2clib",
+    "directory": "/home/nicola/Documents/stm32f103xx",
     "output": "obj/core/main.o"
   },
   {
@@ -168,11 +198,12 @@
       "-Iheaders/core",
       "-Iheaders/i2c",
       "-Iheaders/uart",
+      "-Iheaders/DMA",
       "src/uart/usart.c",
       "-o",
       "obj/uart/usart.o"
     ],
-    "directory": "/home/nicola/Documents/i2clib",
+    "directory": "/home/nicola/Documents/stm32f103xx",
     "output": "obj/uart/usart.o"
   },
   {
@@ -190,11 +221,12 @@
       "-Iheaders/core",
       "-Iheaders/i2c",
       "-Iheaders/uart",
+      "-Iheaders/DMA",
       "src/uart/neo6m.c",
       "-o",
       "obj/uart/neo6m.o"
     ],
-    "directory": "/home/nicola/Documents/i2clib",
+    "directory": "/home/nicola/Documents/stm32f103xx",
     "output": "obj/uart/neo6m.o"
   },
   {
@@ -212,11 +244,12 @@
       "-Iheaders/core",
       "-Iheaders/i2c",
       "-Iheaders/uart",
+      "-Iheaders/DMA",
       "src/uart/a7670.c",
       "-o",
       "obj/uart/a7670.o"
     ],
-    "directory": "/home/nicola/Documents/i2clib",
+    "directory": "/home/nicola/Documents/stm32f103xx",
     "output": "obj/uart/a7670.o"
   }
 ]

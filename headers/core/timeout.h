@@ -2,7 +2,6 @@
 #define TIMEOUT_H_
 
 #include <stdint.h>
-#include "common.h"
 
 typedef enum
 {

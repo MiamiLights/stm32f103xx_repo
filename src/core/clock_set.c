@@ -1,6 +1,7 @@
 #include "clock_set.h"
 #include "stdint.h"
 #include <stdint.h>
+#include "common.h"
 
 uint8_t clock_setup(){
     RCC_CR |= (1U<<0); // ci assicuriamo che hsi sia attivato

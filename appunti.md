@@ -60,3 +60,25 @@ Per impostare un clock specifico le fasi da seguire sono:
 3. impostare il prescaler del bus (ricorda che apb1 è max 36 mhz)
 4. accendere pll e attendere
 5. eseguire lo switch finale
+
+
+### DMA1_Channel3_IRQHandler
+
+1. DMA finisce metà trasferimento
+        ↓
+2. Hardware DMA setta HTIF3 o TCIF3 in DMA1_ISR
+        ↓
+3. DMA genera segnale di interrupt verso NVIC
+        ↓
+4. NVIC controlla: bit 13 di ISER0 abilitato? → sì
+        ↓
+5. NVIC interrompe la CPU (qualsiasi cosa stia facendo)
+        ↓
+6. CPU salva il contesto (registri, PC) nello stack
+        ↓
+7. CPU salta automaticamente a DMA1_Channel3_IRQHandler
+   (l'indirizzo è nella vector table del file di startup)
+        ↓
+8. Esegue fill_buffer()
+        ↓
+9. CPU ripristina il contesto e riprende da dove era

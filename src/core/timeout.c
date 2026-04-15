@@ -1,4 +1,5 @@
 #include "timeout.h"
+#include "common.h"
 
 /* se vogliamo che il SysTick timer si resetti ogni ms dobbiamo impostare il numero
  * di cicli pari a freq * 1000000 * 0.001s.
