@@ -1,6 +1,5 @@
 #include "common.h"
 #include <stdint.h>
-#include "main.h"
 #include "megalovania.h"
 
 /* Questa implementazione si basa sulla trasformazione dei campioni, di base questi non sono adatti,
@@ -83,10 +82,10 @@ void DMA1_Channel3_IRQHandler(void){
     uint32_t isr = DMA1_ISR;
 
     if(isr & (1U<<10)) { // HTIF3 flag, metà trasferimento avvenuto
-        DMA1_IFCR = (1U<<8); // Puliamo TUTTI i flag del canale 3 (CGIF3, CTCIF3, CHTIF3, CTEIF3)
+        DMA1_IFCR = (1U<<10); // Puliamo TUTTI i flag HTIF3
         fill_buffer(&audio_ram[0]);
     } else if(isr & (1U<<9)){ // TCIF3 flag, trasferimento completo
-        DMA1_IFCR = (1U<<8); // Puliamo TUTTI i flag del canale 3
+        DMA1_IFCR = (1U<<9); // Puliamo flag TCIF3
         fill_buffer(&audio_ram[HALF_BUF]);
     }
 }

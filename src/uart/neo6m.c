@@ -26,37 +26,50 @@ void NEO6M_read_gps_string(char* buffer, uint32_t length_max){
     char c = 0;
     uint32_t index = 0;
 
-    for(uint32_t i = 0; i < length_max; i++) buffer[i] = '\0';
+    memset(buffer, 0, length_max);
 
+    // Svuota i vecchi dati rimasti nella seriale
     for(int i = 0; i < 10; i++) {
         if (USART1_SR & RXNE) (void)USART1_DR;
         else break;
     }
 
-    uint32_t search_limit = 2000;
-    while(search_limit > 0){
-        c = usart1_receive();
-        if (c == '$') break;
-        search_limit--;
+    uint32_t timeout = 500000;
+    while (timeout > 0) {
+
+        if (USART1_SR & RXNE) {
+            c = USART1_DR;
+            if (c == '$') break;
+        }
+        timeout--;
     }
 
-    if (c != '$') return;
+    // Se abbiamo esaurito il tempo senza trovare '$', usciamo subito
+    if (timeout == 0) return;
 
     buffer[0] = '$';
     index = 1;
 
-    while (index < length_max - 1){
-        c = usart1_receive();
-        if (c == '\n' || c == '\r') break;
-        buffer[index] = c;
-        index++;
+    timeout = 500000;
+    while (index < (length_max - 1) && timeout > 0) {
+        if (USART1_SR & RXNE) {
+            c = USART1_DR;
+            if (c == '\n' || c == '\r') break;
+            buffer[index] = c;
+            index++;
+            timeout = 500000;
+        } else {
+            timeout--;
+        }
     }
+
     buffer[index] = '\0';
 }
 
 void NEO6M_format_gps_data(char *buffer, GPS_Data *data){
     NEO6M_read_gps_string(buffer, 100);
-    if (buffer[0] != '\0' && strncmp(buffer, "$GNGGA", 6)==0){
+    if (buffer[0] == '\0') return;
+    if (strncmp(buffer, "$GNGGA", 6)==0 || strncmp(buffer, "$GPGGA", 6) == 0){
         char *f;
 
         // time
