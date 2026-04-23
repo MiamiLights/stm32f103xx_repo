@@ -12,7 +12,7 @@ Il progetto integra il supporto per:
 - **Audio/Buzzer**: Riproduzione di toni (es. Megalovania) tramite DMA.
 - **Core**: Startup custom, syscalls e configurazione dei clock di sistema.
 
-## 📁 Struttura del Progetto
+## Struttura del Progetto
 
 ```text
 ├── headers/         # Header files (.h) suddivisi per modulo (core, DMA, i2c, uart)
