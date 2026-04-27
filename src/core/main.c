@@ -12,13 +12,15 @@
 #include <string.h>
 #include <sys/_intsup.h>
 #include "common.h"
+#include "SD.h"
+#include "spi.h"
 
 void LED_init(void) {
   RCC_APB2ENR |= (1U << 3);   // abilitiamo il clock per la porta B (GPIOBEN)
   GPIOB_CRL &= ~(0xFUL << 8); // puliamo i bit di configurazione per PB2
   GPIOB_CRL |= (1U << 8);     // modalità general purpose output push-pull
 
-  GPIOB_ODR |= LED_PIN;       // impostiamo il pin PB2 ad alto
+  GPIOB_ODR &= ~LED_PIN;       // impostiamo il pin PB2 ad alto
 }
 
 void LED_toggle(void) {
@@ -33,6 +35,7 @@ uint8_t freq;
 char gpsBuffer[100] = {0};
 char displayBuffer[1024] = {0};
 char testo[30] = {0};
+char sd_buffer[512];
 
 // Passiamo i puntatori (&old, &new) per risparmiare memoria
 uint8_t is_display_update_needed(GPS_Data *old, GPS_Data *new){
@@ -48,68 +51,100 @@ uint8_t is_display_update_needed(GPS_Data *old, GPS_Data *new){
     return 0;
 }
 
+void format_gps_float(float value, char* buffer_out, const char* prefisso){
+    int integer = (int)value;
+    int decimal = (int) (((value - (float)integer)*100000.0f) + 0.5f);
+    sprintf(buffer_out, "%s %d.%05d", prefisso, integer, decimal);
+}
+
 void update_display(){
     SSD1306_clear();
     memset(displayBuffer, 0, 1024);
+
     sprintf(testo, "Time: %02d:%02d:%02d", gpsData.hour, gpsData.minute, gpsData.second);
     SSD1306_print_string(testo, 0, 0, 1, displayBuffer);
-    sprintf(testo, "Lat: %f", gpsData.latitude);
+
+    format_gps_float(gpsData.latitude, testo, "Lat: ");
     SSD1306_print_string(testo, 0, 10, 1, displayBuffer);
+
+
+    format_gps_float(gpsData.longitude, testo, "Lon: ");
+    SSD1306_print_string(testo, 0, 20, 1, displayBuffer);
+
     SSD1306_write_data(displayBuffer, 1024);
 }
 
 
 int main(void) {
-  freq = clock_setup();
-  ticks_init(freq);
-  usart1_init(freq, 9600);
-  SSD1306_power_on();
-  old_gpsData = gpsData;
+    freq = clock_setup();
+    ticks_init(freq);
+    usart1_init(freq, 9600);
+    SSD1306_power_on();
+    old_gpsData = gpsData;
+    SPI1_init();
+    SSD1306_clear();
+    memset(displayBuffer, 0, 1024);
+    SSD1306_print_string("Time: 20:20:12", 0, 0, 1, displayBuffer);
+    SSD1306_write_data(displayBuffer, 1024);
 
-  NEO6M_format_gps_data(gpsBuffer, &gpsData);
-  SSD1306_clear();
-  memset(displayBuffer, 0, 1024);
-  SSD1306_print_string("Time: 20:20:12", 0, 0, 1, displayBuffer);
-  SSD1306_write_data(displayBuffer, 1024);
+    int sd_written = 0;
 
-  //update_display();
+    LED_init();
 
-  /*
-  // Esempio I2C per AHT20
-  i2c1_init();
-  AHT20_init_sequence();
-  uint8_t buffer_i2c[7];
-  */
+    //update_display();
 
-  /*
-  RCC_APB2ENR |= (1U << 2);
-  GPIOA_CRL &= ~(0xFU << 28);
-  GPIOA_CRL |= (0b0010U << 28);
-  */
+    /*
+    // Esempio I2C per AHT20
+    i2c1_init();
+    AHT20_init_sequence();
+    uint8_t buffer_i2c[7];
+    */
 
-  while (1) {
-      NEO6M_read_gps_string(gpsBuffer, 100);
-      NEO6M_format_gps_data(gpsBuffer, &gpsData);
-      if (is_display_update_needed(&old_gpsData, &gpsData)) {
-          update_display();
-          old_gpsData = gpsData;
-      }
+    /*
+    RCC_APB2ENR |= (1U << 2);
+    GPIOA_CRL &= ~(0xFU << 28);
+    GPIOA_CRL |= (0b0010U << 28);
+    */
+    while (1) {
+        NEO6M_format_gps_data(gpsBuffer, &gpsData);
+             if (is_display_update_needed(&old_gpsData, &gpsData)) {
+                 update_display();
+                 old_gpsData = gpsData;
+             }
 
 
-      /*
-      GPIOA_ODR |= (1U<<7);
-      delay(500);
-      GPIOA_ODR &= ~(1U<<7);
-      delay(500);
-      NEO6M_format_gps_data(buffer_gps, &gpsData);
-      A7670_format_gps_data(buffer_gps, &gpsData);
+             /*
+             GPIOA_ODR |= (1U<<7);
+             delay(500);
+             GPIOA_ODR &= ~(1U<<7);
+             delay(500);
+             NEO6M_format_gps_data(buffer_gps, &gpsData);
+             A7670_format_gps_data(buffer_gps, &gpsData);
 
-      AHT20_trigger_measurement();
-      AHT20_read_results(buffer_i2c);
-      AHT20_calculate_data(buffer_i2c, &sensor_data);
-      */
+             AHT20_trigger_measurement();
+             AHT20_read_results(buffer_i2c);
+             AHT20_calculate_data(buffer_i2c, &sensor_data);
+             */
+             if (!sd_written){
+                 sd_init();
+                 uint8_t esito;
 
-  }
+                 memset(sd_buffer, 0, 512);
+                 snprintf(sd_buffer, 512, "LOG GPS - Lat: %.6f | Lon: %.6f | Ora: %02d:%02d:%02d", gpsData.latitude,
+                          gpsData.longitude,
+                          gpsData.hour,
+                          gpsData.minute,
+                          gpsData.second);
+
+                 esito = sd_write_sector(100, (uint8_t*)sd_buffer);
+                 if (esito == 0){
+                     sd_written = 1;
+                     LED_toggle();
+                 }
+             }
+
+    }
+
 }
 
 void A7670_test(){

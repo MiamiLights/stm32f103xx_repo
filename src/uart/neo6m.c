@@ -23,37 +23,30 @@ static char* get_field(char* str, int field_index) {
 }
 
 void NEO6M_read_gps_string(char* buffer, uint32_t length_max){
-    char c = 0;
+    uint8_t c = 0;
     uint32_t index = 0;
-
     memset(buffer, 0, length_max);
-
-    // Svuota i vecchi dati rimasti nella seriale
-    for(int i = 0; i < 10; i++) {
-        if (USART1_SR & RXNE) (void)USART1_DR;
-        else break;
-    }
-
     uint32_t timeout = 500000;
+
     while (timeout > 0) {
 
-        if (USART1_SR & RXNE) {
-            c = USART1_DR;
+        if (usart1_read_buffer(&c)) {
             if (c == '$') break;
         }
         timeout--;
     }
 
     // Se abbiamo esaurito il tempo senza trovare '$', usciamo subito
-    if (timeout == 0) return;
-
+    if (timeout == 0) {
+        buffer[0] = '\0';
+        return;
+    }
     buffer[0] = '$';
     index = 1;
-
     timeout = 500000;
+
     while (index < (length_max - 1) && timeout > 0) {
-        if (USART1_SR & RXNE) {
-            c = USART1_DR;
+        if (usart1_read_buffer(&c)) {
             if (c == '\n' || c == '\r') break;
             buffer[index] = c;
             index++;
@@ -83,12 +76,19 @@ void NEO6M_format_gps_data(char *buffer, GPS_Data *data){
 
         // latitudine
         f = get_field(buffer, 2);
-        if (f && *f != ',' && *f != '\0') data->latitude = atof(f);
+        if (f && *f != ',' && *f != '\0') {
+            float val = atof(f);
+            val = val/100;
+            data->latitude = val;
+        }
 
         // longitudine
         f = get_field(buffer, 4);
-        if (f && *f != ',' && *f != '\0') data->longitude = atof(f);
-
+        if (f && *f != ',' && *f != '\0') {
+                float val = atof(f);
+                val = val/100;
+                data->longitude = val;
+            }
         // fix quality
         f = get_field(buffer, 6);
         if (f && *f != ',' && *f != '\0') data->fixValid = atoi(f);

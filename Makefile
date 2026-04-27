@@ -1,7 +1,7 @@
 CC=arm-none-eabi-gcc
 MACH=cortex-m3
 CFLAGS= -c -g -mcpu=$(MACH) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0 \
-        -Iheaders/core -Iheaders/i2c -Iheaders/uart -Iheaders/DMA
+        -Iheaders/core -Iheaders/i2c -Iheaders/uart -Iheaders/DMA -Iheaders/SPI
 LDFLAGS= -mcpu=$(MACH) -mthumb -mfloat-abi=soft --specs=nano.specs --specs=nosys.specs -T stm32_ls.ld -Wl,-Map=final.map -u _printf_float -lm
 
 SRC_DIR= src
@@ -16,7 +16,7 @@ all: $(OBJ_DIR) final.elf
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
-	mkdir -p $(OBJ_DIR)/core $(OBJ_DIR)/i2c $(OBJ_DIR)/uart $(OBJ_DIR)/DMA
+	mkdir -p $(OBJ_DIR)/core $(OBJ_DIR)/i2c $(OBJ_DIR)/uart $(OBJ_DIR)/DMA $(OBJ_DIR)/SPI
 
 # Regola di compilazione generica per le sottocartelle
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
