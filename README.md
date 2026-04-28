@@ -11,6 +11,7 @@ Il progetto integra il supporto per:
 - **Modulo GSM/LTE A7670**: Gestione connettività cellulare via UART.
 - **Audio/Buzzer**: Riproduzione di toni (es. Megalovania) tramite DMA.
 - **Core**: Startup custom, syscalls e configurazione dei clock di sistema.
+- **SPI**: Driver generici per protocollo SPI e implementazione di drivers per scheda SDHC
 
 ## Struttura del Progetto
 
@@ -37,7 +38,7 @@ Per compilare il progetto e generare il file binario, esegui semplicemente:
 make
 ```
 
-I file compilati verranno inseriti nella cartella `obj/` e verrà prodotto il file eseguibile (solitamente un `.bin` o `.elf` a seconda della configurazione del tuo Makefile).
+I file compilati verranno inseriti nella cartella `obj/` e verrà prodotto il file eseguibile `final.elf` .
 
 ## Note
 Questo progetto non utilizza librerie HAL o standard esterne pesanti, puntando su una gestione diretta dei registri e driver ottimizzati per le periferiche specifiche.
