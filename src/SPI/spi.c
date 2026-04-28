@@ -21,27 +21,22 @@ void SPI1_init(){
 
     GPIOA_CRL &= ~(0xFFFFU << 16); // Pulizia registri per PA4, PA5, PA6 e PA7
 
-    // PA4 (CS)   -> General Purpose Output Push-Pull 50MHz
-    GPIOA_CRL |= (1U << 16);
-    GPIOA_CRL |= (1U << 17);
+    // PA4 (CS)  -> General Purpose Output Push-Pull 50MHz
+    GPIOA_CRL |= (0b0011 << 16);
 
-    // PA5 (SCK)  -> Alternate Function Push-Pull 50MHz
-    GPIOA_CRL |= (1U << 20);
-    GPIOA_CRL |= (1U << 21);
-    GPIOA_CRL |= (1U << 23);
+    // PA5 (SCK) -> Alternate Function Push-Pull 50MHz
+    GPIOA_CRL |= (0b1011 << 20);
 
     // PA6 (MISO) -> Input Floating
-    GPIOA_CRL |= (1U << 26);
+    GPIOA_CRL |= (0b0100 << 24);
 
-    // PA7 (MOSI) -> Alternate Function Push-Pull 50MHz
-    GPIOA_CRL |= (1U << 28);
-    GPIOA_CRL |= (1U << 29);
-    GPIOA_CRL |= (1U << 31);
+    // PA7 (MOSI) ->  Alternate Function Push-Pull 50MHz
+    GPIOA_CRL |= (0b1011 << 28);
 
     // Mettiamo subito il CS (PA4) ad ALTO (SD a riposo)
     GPIOA_ODR |= (1U << 4);
 
-
+    SPI1_CR1 = 0; // Reset totale del registro per sicurezza
 
     // 1. configure BR
     // fpclk/2 -> se il clk é 64MHZ allora 32 MHZ)
@@ -50,10 +45,9 @@ void SPI1_init(){
 
     SPI1_CR1 |= (1U<<2); // master configuration
 
-    // 2. select CPOL and CPHA bits
-    SPI1_CR1 &= ~(1U << 1);
-    // NOTA PER SD: Usa Modalità 0, quindi CPHA deve essere 0 (prima transizione)
-    SPI1_CR1 &= ~(1U << 0);
+    // CPOL=0, CPHA=0 (Mode 0) sono già 0 dopo il reset di CR1
+    SPI1_CR1 &= ~(1U << 1); // CPOL = 0 (Clock a riposo BASSO)
+    SPI1_CR1 &= ~(1U << 0); // CPHA = 0 (Campiona sul PRIMO fronte)
 
     // 3. select DFF bit per 8 bits data frame format
     SPI1_CR1 &= ~(1U<<11);
@@ -74,7 +68,7 @@ uint8_t SPI1_transmit(uint8_t data_out){
      */
     uint32_t timeout = 50000;
 
-    while( (SPI1_SR & (1U<<7)) || !(SPI1_SR & (1U<<1)) ){ // canale occupato
+    while( !(SPI1_SR & (1U<<1)) ){ // canale occupato
         if (--timeout == 0) return 0xFF;
     }
     // canale non occupato
@@ -85,5 +79,6 @@ uint8_t SPI1_transmit(uint8_t data_out){
     while( !(SPI1_SR & (1U<<0)) ){ // attendiamo il byte di risposta
         if (--timeout == 0) return 0xFF;
     }
-    return SPI1_DR; // leggiamo il byte di risposta per resettare la flag RXNE
+    uint8_t temp = SPI1_DR; // leggiamo il byte di risposta per resettare la flag RXNE
+    return temp;
 }

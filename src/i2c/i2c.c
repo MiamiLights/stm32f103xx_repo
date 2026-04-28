@@ -27,7 +27,6 @@ void i2c1_init(void){
     // setting clock frequency i2c
     I2C1_CR2 &= ~(0x3FUL);
     I2C1_CR2 |= (1U << 3); // 8MHz
-    ticks_init(8);
 
     I2C1_CCR &= ~(0xFFFUL);
     I2C1_CCR |= (0x28);

@@ -1,5 +1,6 @@
 #include "spi.h"
 #include "common.h"
+#include "timeout.h"
 #include <stdint.h>
 
 // PA4 CS
@@ -32,11 +33,11 @@ uint8_t sd_send_command(uint8_t command, uint32_t arg, uint8_t crc ){
 
     /* Aspettiamo la risposta della scheda.
      * La scheda può impiegare fino a 8 cicli di clock per rispondere.
-     * Ignoriamo i 0xFF (silenzio) finché non arriva un byte diverso.
+     * Aumentiamo i tentativi a 100 per maggiore compatibilità.
      */
     for (int i = 0; i < 10; i++) {
         res = SPI1_transmit(0xFF);
-        if (res != 0xFF) break; // Trovata la risposta R1!
+        if (res != 0xFF) break; // Trovata la risposta!
     }
 
     return res;
@@ -44,15 +45,16 @@ uint8_t sd_send_command(uint8_t command, uint32_t arg, uint8_t crc ){
 
 uint8_t sd_init(void){
     uint8_t response;
-    uint32_t timeout = 100000;
+    uint32_t timeout = 2000;
 
     CS_HIGH_SET();
+    delay(10); // Piccolo delay per stabilizzare la tensione
     for(int i = 0; i < 10; i++) SPI1_transmit(0xFF); // 80 dummy clocks
-     // inizializzazione terminata
 
     CS_LOW_SET();
 
-    // software reset
+    // software reset (CMD0) - Proviamo più volte se fallisce
+
 
     if (sd_send_command(0, 0, 0x95) != 0x01){
         CS_HIGH_SET();
@@ -60,23 +62,39 @@ uint8_t sd_init(void){
     }
 
     // controllo voltaggio
-    sd_send_command(8, 0x000001AA, 0x87);
+    response = sd_send_command(8, 0x000001AA, 0x87);
     /*
      * Poichè cmd8 risponde con un R7, ossia (R1 + 32 bits di coda) che a noi non interessano
      */
     SPI1_transmit(0xFF); SPI1_transmit(0xFF); SPI1_transmit(0xFF); SPI1_transmit(0xFF);
 
+    uint8_t res55;
     do {
-        sd_send_command(55, 0, 0xFF);
+
+        res55 = sd_send_command(55, 0, 0xFF);
+
+        // Se il CMD55 va in errore (0x05 = Illegal Command), la scheda è confusa
+        if (res55 != 0x01 && res55 != 0x00) {
+            CS_HIGH_SET();
+            return 3; // Codice d'errore: CMD55 Rifiutato
+        }
+
         response = sd_send_command(41, 0x40000000, 0xFF);
         timeout--;
     } while (response != 0x00 && timeout > 0);
 
     // finito, chiudiamo la comunicazione.
 
+    SPI1_transmit(0xFF);
+    if (timeout == 0){
+        CS_HIGH_SET();
+        return 2;
+    }
+
+    response = sd_send_command(16, 512, 0xFF);
+
     CS_HIGH_SET();
     SPI1_transmit(0xFF);
-    if (timeout == 0) return 2;
 
     return 0;
 }

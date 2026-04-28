@@ -35,7 +35,8 @@ uint8_t freq;
 char gpsBuffer[100] = {0};
 char displayBuffer[1024] = {0};
 char testo[30] = {0};
-char sd_buffer[512];
+uint8_t sd_write_buffer[512];
+uint8_t sd_read_buffer[512];
 
 // Passiamo i puntatori (&old, &new) per risparmiare memoria
 uint8_t is_display_update_needed(GPS_Data *old, GPS_Data *new){
@@ -84,65 +85,72 @@ int main(void) {
     SPI1_init();
     SSD1306_clear();
     memset(displayBuffer, 0, 1024);
-    SSD1306_print_string("Time: 20:20:12", 0, 0, 1, displayBuffer);
-    SSD1306_write_data(displayBuffer, 1024);
+    uint8_t stato_sd = sd_init();
+    memset(sd_read_buffer, 0, 512);
 
-    int sd_written = 0;
+    if (stato_sd != 0) {
+        LED_init();
+        memset(displayBuffer, 0, 1024);
 
-    LED_init();
+        if (stato_sd == 1) {
+            SSD1306_print_string("ERR: CMD0 MUTO", 0, 0, 1, displayBuffer);
+        } else if (stato_sd == 2) {
+            SSD1306_print_string("ERR: TIMEOUT 41", 0, 0, 1, displayBuffer);
+        // dentro l'if (stato_sd != 0)
+        } else if (stato_sd == 3) {
+            SSD1306_print_string("ERR: CMD55 RIFIUTATO", 0, 0, 1, displayBuffer);
+        }
+        else {
+            SSD1306_print_string("INIT FALLITO", 0, 0, 1, displayBuffer);
+        }
 
-    //update_display();
+        SSD1306_write_data(displayBuffer, 1024);
+        while(1); // Blocca tutto qui per farti leggere l'errore
+    }
+    else {
+        memset(displayBuffer, 0, 1024);
+        SSD1306_print_string("INIT RIUSCITO", 0, 0, 1, displayBuffer);
+        SSD1306_write_data(displayBuffer, 1024);
+        delay(100);
+    }
+    delay(1000);
+    memset(displayBuffer, 0, 1024);
+    char* string = "PROVA SCHEDA SD";
+    uint8_t i = 0;
+    memset(sd_write_buffer, 0, 512);
+    while(*string != '\0'){
+        sd_write_buffer[i] = *string;
+        string++;
+        i++;
+    }
 
-    /*
-    // Esempio I2C per AHT20
-    i2c1_init();
-    AHT20_init_sequence();
-    uint8_t buffer_i2c[7];
-    */
+    if (sd_write_sector(3, sd_write_buffer) != 0){
+        SSD1306_print_string("SCRITTURA FALLITA", 0, 0, 1, displayBuffer);
+        SSD1306_write_data(displayBuffer, 1024);
+    }
+    else{
+        SSD1306_print_string("SCRITTURA RIUSCITA", 0, 0, 1, displayBuffer);
+        SSD1306_write_data(displayBuffer, 1024);
+        LED_toggle();
+    }
 
-    /*
-    RCC_APB2ENR |= (1U << 2);
-    GPIOA_CRL &= ~(0xFU << 28);
-    GPIOA_CRL |= (0b0010U << 28);
-    */
+
+    if(sd_read_sector(0, sd_read_buffer) == 0){
+        char display_text[32];
+        sniprintf(display_text, sizeof(display_text), "SD: %.16s", (char*)sd_read_buffer);
+        SSD1306_print_string(display_text, 0, 20, 1, displayBuffer);
+        SSD1306_write_data(displayBuffer, 1024);
+    } else {
+        SSD1306_print_string("ERRORE LETTURA", 0, 20, 1, displayBuffer);
+        SSD1306_write_data(displayBuffer, 1024);
+    }
+
     while (1) {
-        NEO6M_format_gps_data(gpsBuffer, &gpsData);
-             if (is_display_update_needed(&old_gpsData, &gpsData)) {
-                 update_display();
-                 old_gpsData = gpsData;
-             }
-
-
-             /*
-             GPIOA_ODR |= (1U<<7);
-             delay(500);
-             GPIOA_ODR &= ~(1U<<7);
-             delay(500);
-             NEO6M_format_gps_data(buffer_gps, &gpsData);
-             A7670_format_gps_data(buffer_gps, &gpsData);
-
-             AHT20_trigger_measurement();
-             AHT20_read_results(buffer_i2c);
-             AHT20_calculate_data(buffer_i2c, &sensor_data);
-             */
-             if (!sd_written){
-                 sd_init();
-                 uint8_t esito;
-
-                 memset(sd_buffer, 0, 512);
-                 snprintf(sd_buffer, 512, "LOG GPS - Lat: %.6f | Lon: %.6f | Ora: %02d:%02d:%02d", gpsData.latitude,
-                          gpsData.longitude,
-                          gpsData.hour,
-                          gpsData.minute,
-                          gpsData.second);
-
-                 esito = sd_write_sector(100, (uint8_t*)sd_buffer);
-                 if (esito == 0){
-                     sd_written = 1;
-                     LED_toggle();
-                 }
-             }
-
+        // NEO6M_format_gps_data(gpsBuffer, &gpsData);
+        //      if (is_display_update_needed(&old_gpsData, &gpsData)) {
+        //          update_display();
+        //          old_gpsData = gpsData;
+        //      }
     }
 
 }

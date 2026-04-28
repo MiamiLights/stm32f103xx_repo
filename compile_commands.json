@@ -1,6 +1,6 @@
 [
   {
-    "file": "src/SPI/SD.c",
+    "file": "src/core/main.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -16,11 +16,11 @@
       "-Iheaders/uart",
       "-Iheaders/DMA",
       "-Iheaders/SPI",
-      "src/SPI/SD.c",
+      "src/core/main.c",
       "-o",
-      "obj/SPI/SD.o"
+      "obj/core/main.o"
     ],
     "directory": "/home/nicola/Documents/stm32f103xx",
-    "output": "obj/SPI/SD.o"
+    "output": "obj/core/main.o"
   }
 ]
